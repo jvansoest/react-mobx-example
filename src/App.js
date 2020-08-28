@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { inject, observer } from "mobx-react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+@inject("MyStore")
+@observer
+class App extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const bird = this.bird.value;
+    this.props.MyStore.addBird(bird);
+    this.bird.value = "";
+  };
+
+  render() {
+    const { MyStore } = this.props;
+    // const MyStore = this.props.MyStore
+
+    return (
+      <div className="App">
+        <h2>you have {MyStore.birdCount} birds.</h2>
+
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <input
+            type="text"
+            ref={(i) => (this.bird = i)}
+            placeholder="Enter bird"
+          ></input>
+          <button>Ok</button>
+        </form>
+      </div>
+    );
+  }
 }
 
 export default App;
